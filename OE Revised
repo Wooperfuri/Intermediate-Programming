@@ -1,68 +1,71 @@
 # movie_ticket_system.py
 
-# ===== Part A: User Inputs with Validation =====
+# ===== Constants / Definitions =====
+WEEKDAY_PRICE = 200.00
+WEEKEND_PRICE = 300.00
+MATINEE_END = 12
+STUDENT_DISCOUNT_RATE = 0.20
+SENIOR_DISCOUNT_RATE = 0.30
+MATINEE_DISCOUNT_RATE = 0.10
+GROUP_DISCOUNT_RATE = 0.05
+GROUP_MIN_TICKETS = 5
 
-# Day input
-while True:
-    day = input("Day type (weekday/weekend): ").lower()
-    if day in ["weekday", "weekend"]:
-        break
-    print("Invalid choice. Please type 'weekday' or 'weekend'.")
+# ===== Part A: User Inputs =====
+day = input("Day type (weekday/weekend): ").lower()
+customer = input("Customer type (regular/student/senior): ").lower()
+time = int(input("Movie time (9–22): "))
+tickets = int(input("Number of tickets: "))
 
-# Customer input
-while True:
-    customer = input("Customer type (regular/student/senior): ").lower()
-    if customer in ["regular", "student", "senior"]:
-        break
-    print("Invalid choice. Choose regular, student, or senior.")
+# ===== Part B: Display Selection =====
+print(f"\n=== MOVIE TICKET SYSTEM ===")
+print(f"Day: {day}")
+print(f"Customer type: {customer}")
+print(f"Show time: {time}")
+print(f"Number of tickets: {tickets}")
 
-# Movie time input
-while True:
-    try:
-        time = int(input("Movie time (9–22 in 24hr format): "))
-        if 9 <= time <= 22:
-            break
-        print("Cinema operates only from 9 to 22.")
-    except ValueError:
-        print("Invalid input. Please enter a number.")
-
-# Ticket count input
-while True:
-    try:
-        tickets = int(input("Number of tickets: "))
-        if tickets > 0:
-            break
-        print("Ticket count must be positive.")
-    except ValueError:
-        print("Invalid input. Please enter a number.")
-
-# ===== Part B: Base Pricing =====
-if day == "weekday":
-    base_price = 200
+# ===== Part C: Calculations (Sequential Discounts) =====
+if day == "weekend":
+    base_price = WEEKEND_PRICE
 else:
-    base_price = 300
+    base_price = WEEKDAY_PRICE
 
 subtotal = base_price * tickets
-discount = 0
+current_balance = subtotal
 
-# ===== Part C: Discounts =====
+# 1. Student/Senior Discount
+student_disc_amt = 0
+senior_disc_amt = 0
 if customer == "student":
-    discount += subtotal * 0.20
+    student_disc_amt = current_balance * STUDENT_DISCOUNT_RATE
+    current_balance -= student_disc_amt
 elif customer == "senior":
-    discount += subtotal * 0.30
+    senior_disc_amt = current_balance * SENIOR_DISCOUNT_RATE
+    current_balance -= senior_disc_amt
 
-if time < 12:
-    discount += subtotal * 0.10
+# 2. Matinee Discount
+matinee_disc_amt = 0
+if time < MATINEE_END:
+    matinee_disc_amt = current_balance * MATINEE_DISCOUNT_RATE
+    current_balance -= matinee_disc_amt
 
-if tickets >= 5:
-    discount += subtotal * 0.05
+# 3. Group Discount
+group_disc_amt = 0
+if tickets >= GROUP_MIN_TICKETS:
+    group_disc_amt = current_balance * GROUP_DISCOUNT_RATE
+    current_balance -= group_disc_amt
 
-# ===== Part E: Receipt =====
-final_total = subtotal - discount
+# ===== Part D: Receipt Output =====
+print(f"\n--- RECEIPT ---")
+print(f"Base price: {base_price:.2f} x {tickets} = {subtotal:.2f}")
 
-print("\n----- ITEMIZED RECEIPT -----")
-print("Base price per ticket: ₱", base_price)
-print("Number of tickets:", tickets)
-print("Subtotal: ₱", subtotal)
-print("Total discounts: ₱", round(discount, 2))
-print("Final Total: ₱", round(final_total, 2))
+if student_disc_amt > 0:
+    print(f"Student discount (20%): -{student_disc_amt:.2f}")
+if senior_disc_amt > 0:
+    print(f"Senior discount (30%): -{senior_disc_amt:.2f}")
+if matinee_disc_amt > 0:
+    print(f"Matinee discount (10%): -{matinee_disc_amt:.2f}")
+if group_disc_amt > 0:
+    print(f"Group discount (5%): -{group_disc_amt:.2f}")
+
+print(f"\nTOTAL: {current_balance:.2f}")
+print("Thank you for your purchase!")
