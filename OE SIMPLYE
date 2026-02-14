@@ -1,0 +1,68 @@
+# movie_ticket_system.py
+
+# ===== Constants / Definitions =====
+WEEKDAY_PRICE = 200
+WEEKEND_PRICE = 300
+MATINEE_END = 12
+STUDENT_DISCOUNT = 0.20
+SENIOR_DISCOUNT = 0.30
+MATINEE_DISCOUNT = 0.10
+GROUP_DISCOUNT = 0.05
+GROUP_MIN_TICKETS = 5
+
+# ===== Part A: User Inputs =====
+
+# Day input
+day = input("Day type (weekday/weekend): ").lower()
+if day not in ["weekday", "weekend"]:
+    print("Invalid choice. Defaulting to 'weekday'.")
+    day = "weekday"
+
+# Customer input
+customer = input("Customer type (regular/student/senior): ").lower()
+if customer not in ["regular", "student", "senior"]:
+    print("Invalid choice. Defaulting to 'regular'.")
+    customer = "regular"
+
+# Movie time input
+time = int(input("Movie time (9–22 in 24hr format): "))
+if time < 9 or time > 22:
+    print("Invalid time. Defaulting to 12.")
+    time = 12
+
+# Ticket count input
+tickets = int(input("Number of tickets: "))
+if tickets <= 0:
+    print("Ticket count must be positive. Defaulting to 1 ticket.")
+    tickets = 1
+
+# ===== Part B: Base Pricing =====
+if day == "weekday":
+    base_price = WEEKDAY_PRICE
+else:
+    base_price = WEEKEND_PRICE
+
+subtotal = base_price * tickets
+discount = 0
+
+# ===== Part C: Discounts =====
+if customer == "student":
+    discount += subtotal * STUDENT_DISCOUNT
+elif customer == "senior":
+    discount += subtotal * SENIOR_DISCOUNT
+
+if time < MATINEE_END:
+    discount += subtotal * MATINEE_DISCOUNT
+
+if tickets >= GROUP_MIN_TICKETS:
+    discount += subtotal * GROUP_DISCOUNT
+
+# ===== Part E: Receipt =====
+final_total = subtotal - discount
+
+print("\n----- ITEMIZED RECEIPT -----")
+print("Base price per ticket: ₱", base_price)
+print("Number of tickets:", tickets)
+print("Subtotal: ₱", subtotal)
+print("Total discounts: ₱", round(discount, 2))
+print("Final Total: ₱", round(final_total, 2))
