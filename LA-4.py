@@ -1,10 +1,6 @@
 # Eligibility Checker Program
 
-try:
-    age = int(input("Enter your age: "))
-except ValueError:
-    print("Invalid input. Please enter a number.")
-    exit()
+age = int(input("Enter your age: "))
 
 # Stop program if underage
 if age <= 17:
