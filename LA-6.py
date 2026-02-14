@@ -4,15 +4,19 @@
 correct_username = "admin"
 correct_password = "12345"
 
-# Ask user input
-username = input("Enter username: ")
-password = input("Enter password: ")
+try:
+    # Ask user input
+    username = input("Enter username: ")
+    password = input("Enter password: ")
 
-# Validation
-if username == correct_username:
-    if password == correct_password:
-        print("Welcome! Login successful.")
+    # Validation
+    if username == correct_username:
+        if password == correct_password:
+            print("Welcome! Login successful.")
+        else:
+            print("Incorrect password.")
     else:
-        print("Incorrect password.")
-else:
-    print("User not found.")
+        print("User not found.")
+
+except Exception:
+    print("An error occurred during login. Please try again.")
