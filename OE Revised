@@ -10,20 +10,42 @@ MATINEE_DISCOUNT_RATE = 0.10
 GROUP_DISCOUNT_RATE = 0.05
 GROUP_MIN_TICKETS = 5
 
-# ===== Part A: User Inputs =====
+# ===== Part A: User Inputs with Validation =====
+
+# Day input
 day = input("Day type (weekday/weekend): ").lower()
+if day not in ["weekday", "weekend"]:
+    print("Invalid choice. Defaulting to 'weekday'.")
+    day = "weekday"
+
+# Customer input
 customer = input("Customer type (regular/student/senior): ").lower()
-time = int(input("Movie time (9–22): "))
-tickets = int(input("Number of tickets: "))
+if customer not in ["regular", "student", "senior"]:
+    print("Invalid choice. Defaulting to 'regular'.")
+    customer = "regular"
 
-# ===== Part B: Display Selection =====
-print(f"\n=== MOVIE TICKET SYSTEM ===")
-print(f"Day: {day}")
-print(f"Customer type: {customer}")
-print(f"Show time: {time}")
-print(f"Number of tickets: {tickets}")
+# Movie time input (with Try-Except)
+try:
+    time = int(input("Movie time (9–22 in 24hr format): "))
+    if time < 9 or time > 22:
+        print("Invalid time. Defaulting to 12.")
+        time = 12
+except ValueError:
+    print("Invalid input. Defaulting to 12.")
+    time = 12
 
-# ===== Part C: Calculations (Sequential Discounts) =====
+# Ticket count input (with Try-Except)
+try:
+    tickets = int(input("Number of tickets: "))
+    if tickets <= 0:
+        print("Ticket count must be positive. Defaulting to 1 ticket.")
+        tickets = 1
+except ValueError:
+    print("Invalid input. Defaulting to 1 ticket.")
+    tickets = 1
+
+# ===== Part B: Pricing & Sequential Calculations =====
+
 if day == "weekend":
     base_price = WEEKEND_PRICE
 else:
@@ -32,40 +54,46 @@ else:
 subtotal = base_price * tickets
 current_balance = subtotal
 
-# 1. Student/Senior Discount
-student_disc_amt = 0
-senior_disc_amt = 0
+# Calculate individual discounts based on the RUNNING balance
+student_disc = 0
+senior_disc = 0
 if customer == "student":
-    student_disc_amt = current_balance * STUDENT_DISCOUNT_RATE
-    current_balance -= student_disc_amt
+    student_disc = current_balance * STUDENT_DISCOUNT_RATE
+    current_balance -= student_disc
 elif customer == "senior":
-    senior_disc_amt = current_balance * SENIOR_DISCOUNT_RATE
-    current_balance -= senior_disc_amt
+    senior_disc = current_balance * SENIOR_DISCOUNT_RATE
+    current_balance -= senior_disc
 
-# 2. Matinee Discount
-matinee_disc_amt = 0
+matinee_disc = 0
 if time < MATINEE_END:
-    matinee_disc_amt = current_balance * MATINEE_DISCOUNT_RATE
-    current_balance -= matinee_disc_amt
+    matinee_disc = current_balance * MATINEE_DISCOUNT_RATE
+    current_balance -= matinee_disc
 
-# 3. Group Discount
-group_disc_amt = 0
+group_disc = 0
 if tickets >= GROUP_MIN_TICKETS:
-    group_disc_amt = current_balance * GROUP_DISCOUNT_RATE
-    current_balance -= group_disc_amt
+    group_disc = current_balance * GROUP_DISCOUNT_RATE
+    current_balance -= group_disc
 
-# ===== Part D: Receipt Output =====
+# ===== Part C: Final Output (Matching the Image) =====
+
+print(f"\n=== MOVIE TICKET SYSTEM ===")
+print(f"Day: {day}")
+print(f"Customer type: {customer}")
+print(f"Show time: {time}")
+print(f"Number of tickets: {tickets}")
+
 print(f"\n--- RECEIPT ---")
 print(f"Base price: {base_price:.2f} x {tickets} = {subtotal:.2f}")
 
-if student_disc_amt > 0:
-    print(f"Student discount (20%): -{student_disc_amt:.2f}")
-if senior_disc_amt > 0:
-    print(f"Senior discount (30%): -{senior_disc_amt:.2f}")
-if matinee_disc_amt > 0:
-    print(f"Matinee discount (10%): -{matinee_disc_amt:.2f}")
-if group_disc_amt > 0:
-    print(f"Group discount (5%): -{group_disc_amt:.2f}")
+# Only display discounts if they are greater than zero
+if student_disc > 0:
+    print(f"Student discount (20%): -{student_disc:.2f}")
+if senior_disc > 0:
+    print(f"Senior discount (30%): -{senior_disc:.2f}")
+if matinee_disc > 0:
+    print(f"Matinee discount (10%): -{matinee_disc:.2f}")
+if group_disc > 0:
+    print(f"Group discount (5%): -{group_disc:.2f}")
 
 print(f"\nTOTAL: {current_balance:.2f}")
 print("Thank you for your purchase!")
