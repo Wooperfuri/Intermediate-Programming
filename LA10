@@ -1,0 +1,20 @@
+# username_generator.py
+
+# 2. Ask user input
+full_name = input("Enter your full name: ").strip()
+birth_year = input("Enter your birth year: ").strip()
+
+# 4. Validate that name has at least first and last name
+name_parts = full_name.split()
+
+if len(name_parts) < 2:
+    print("Error: Please enter at least a first and last name.")
+else:
+    first_name = name_parts[0].lower()
+    last_name = name_parts[-1].lower()
+
+    # 3. Generate username
+    username = first_name[:3] + last_name[:3] + birth_year[-2:]
+
+    # 5. Display username
+    print("Generated username:", username)
