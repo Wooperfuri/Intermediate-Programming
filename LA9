@@ -1,0 +1,28 @@
+# receipt_generator.py
+
+# 2. Ask user to input: item name, quantity, and unit price
+item_name = input("Enter item name: ")
+quantity = int(input("Enter quantity: "))
+unit_price = float(input("Enter unit price: "))
+
+# 3. Calculate the total
+total = quantity * unit_price
+
+# 4. Display formatted receipt
+print("\n" + "=" * 45)
+print("RECEIPT")
+print("=" * 45)
+
+# Item name left-aligned (15 chars)
+# Quantity right-aligned (5 chars)
+# Price with 2 decimals and comma separators
+print(f"{'Item':<15}{'Qty':>5}{'Price':>12}")
+print("-" * 45)
+
+print(f"{item_name:<15}{quantity:>5}{unit_price:>12,.2f}")
+
+print("-" * 45)
+
+# Total with peso sign and proper formatting
+print(f"{'Total:':>32} ₱{total:,.2f}")
+print("=" * 45)
